@@ -26,8 +26,11 @@ public class asiakkaat extends HttpServlet {
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		System.out.println("asiakkaat.doGet()");
+		String pathInfo = request.getPathInfo();
+		System.out.println("polku: " + pathInfo);
+		String hakusana = pathInfo.replace("/", "");
 		Dao dao = new Dao();
-		ArrayList<Myynti> asiakkaat = dao.listaaKaikki();
+		ArrayList<Myynti> asiakkaat = dao.listaaKaikki(hakusana);
 		System.out.println(asiakkaat);
 		String strJSON = new JSONObject().put("asiakkaat", asiakkaat).toString();
 		response.setContentType("application/json");
