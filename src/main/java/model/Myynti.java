@@ -3,17 +3,18 @@ package model;
 public class Myynti {
 
 	private int asiakas_id;
-	private String etunimi, sukunimi, puhelin;
+	private String etunimi, sukunimi, puhelin, sposti;
 	public Myynti() {
 		super();
 		
 	}
-	public Myynti(int asiakas_id, String etunimi, String sukunimi, String puhelin) {
+	public Myynti(int asiakas_id, String etunimi, String sukunimi, String puhelin, String sposti) {
 		super();
 		this.asiakas_id = asiakas_id;
 		this.etunimi = etunimi;
 		this.sukunimi = sukunimi;
 		this.puhelin = puhelin;
+		this.sposti = sposti;
 	}
 	public int getAsiakas_id() {
 		return asiakas_id;
@@ -39,10 +40,16 @@ public class Myynti {
 	public void setPuhelin(String puhelin) {
 		this.puhelin = puhelin;
 	}
+	public String getSposti() {
+		return sposti;
+	}
+	public void setSposti(String sposti) {
+		this.sposti = sposti;
+	}
 	@Override
 	public String toString() {
 		return "Myynti [asiakas_id=" + asiakas_id + ", etunimi=" + etunimi + ", sukunimi=" + sukunimi + ", puhelin="
-				+ puhelin + "]";
+				+ puhelin + ", sposti=" + sposti + "]";
 	}
 	
 	

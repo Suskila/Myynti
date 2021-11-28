@@ -45,7 +45,8 @@ public class Dao {
 						myynti.setAsiakas_id(rs.getInt(1));
 						myynti.setEtunimi(rs.getString(2));
 						myynti.setSukunimi(rs.getString(3));
-						myynti.setPuhelin(rs.getString(4));		
+						myynti.setPuhelin(rs.getString(4));
+						myynti.setSposti(rs.getString(4));	
 						asiakkaat.add(myynti);
 					}					
 				}				
@@ -59,7 +60,7 @@ public class Dao {
 
 public ArrayList<Myynti> listaaKaikki(String hakusana){
 	ArrayList<Myynti> asiakkaat = new ArrayList<Myynti>();
-	sql = "SELECT * FROM asiakkaat WHERE asiakas_id LIKE ? or etunimi LIKE ? or sukunimi LIKE ? or puhelin LIKE ?";       
+	sql = "SELECT * FROM asiakkaat WHERE asiakas_id LIKE ? or etunimi LIKE ? or sukunimi LIKE ? or puhelin LIKE ? or sposti LIKE ?";       
 	try {
 		con=yhdista();
 		if(con!=null){ 
@@ -68,6 +69,7 @@ public ArrayList<Myynti> listaaKaikki(String hakusana){
 			stmtPrep.setString(2, "%" + hakusana + "%");   
 			stmtPrep.setString(3, "%" + hakusana + "%"); 
 			stmtPrep.setString(4, "%" + hakusana + "%");
+			stmtPrep.setString(5, "%" + hakusana + "%");
     		rs = stmtPrep.executeQuery();   
 			if(rs!=null){ 
 				//con.close();					
@@ -76,7 +78,8 @@ public ArrayList<Myynti> listaaKaikki(String hakusana){
 					myynti.setAsiakas_id(rs.getInt(1));
 					myynti.setEtunimi(rs.getString(2));
 					myynti.setSukunimi(rs.getString(3));
-					myynti.setPuhelin(rs.getString(4));		
+					myynti.setPuhelin(rs.getString(4));	
+					myynti.setSposti(rs.getString(5));	
 					asiakkaat.add(myynti);
 				}					
 			}				
@@ -87,5 +90,41 @@ public ArrayList<Myynti> listaaKaikki(String hakusana){
 	}		
 	return asiakkaat;
 }
+
+public boolean lisaaAsiakas(Myynti myynti){
+	boolean paluuArvo=true;
+	sql="INSERT INTO autot VALUES(?,?,?,?)";						  
+	try {
+		con = yhdista();
+		stmtPrep=con.prepareStatement(sql); 
+		stmtPrep.setString(2, myynti.getEtunimi());
+		stmtPrep.setString(3, myynti.getSukunimi());
+		stmtPrep.setString(4, myynti.getPuhelin());
+		stmtPrep.setString(5, myynti.getSposti());
+		stmtPrep.executeUpdate();
+        con.close();
+	} catch (Exception e) {				
+		e.printStackTrace();
+		paluuArvo=false;
+	}				
+	return paluuArvo;
 }
+	public boolean poistaAsiakas(String asiakas_id){
+	boolean paluuArvo=true;
+	sql="DELETE FROM autot WHERE asiakas_id=?";						  
+	try {
+		con = yhdista();
+		stmtPrep=con.prepareStatement(sql); 
+		stmtPrep.setString(1, asiakas_id);			
+		stmtPrep.executeUpdate();
+        con.close();
+	} catch (Exception e) {				
+		e.printStackTrace();
+		paluuArvo=false;
+	}				
+	return paluuArvo;
+}	
+}
+
+
 	

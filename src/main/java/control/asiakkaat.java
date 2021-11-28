@@ -24,23 +24,40 @@ public class asiakkaat extends HttpServlet {
     }
 
 
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		System.out.println("asiakkaat.doGet()");
-		String pathInfo = request.getPathInfo();
-		System.out.println("polku: " + pathInfo);
-		String hakusana = pathInfo.replace("/", "");
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		System.out.println("Asiakkaat.doGet()");
+		String pathInfo = request.getPathInfo();		
+		System.out.println("polku: "+pathInfo);	
+		String hakusana="";
+		if(pathInfo!=null) {		
+			hakusana = pathInfo.replace("/", "");
+		}		
 		Dao dao = new Dao();
 		ArrayList<Myynti> asiakkaat = dao.listaaKaikki(hakusana);
 		System.out.println(asiakkaat);
-		String strJSON = new JSONObject().put("asiakkaat", asiakkaat).toString();
+		String strJSON = new JSONObject().put("asiakkaat", asiakkaat).toString();	
 		response.setContentType("application/json");
 		PrintWriter out = response.getWriter();
-		out.println(strJSON);
+		out.println(strJSON);		
 	}
 
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		System.out.println("asiakkaat.doPost()");
+		JSONObject jsonObj = new JsonStrToObj().convert(request);	
+		Myynti myynti = new Myynti();
+		myynti.setEtunimi(jsonObj.getString("etunimi"));
+		myynti.setSukunimi(jsonObj.getString("sukunimi"));
+		myynti.setPuhelin(jsonObj.getString("puhelin"));
+		myynti.setSposti(jsonObj.getString("sposti"));
+		response.setContentType("application/json");
+		PrintWriter out = response.getWriter();
+		Dao dao = new Dao();			
+		if(dao.lisaaAsiakas(myynti)){ 
+			out.println("{\"response\":1}");  
+		}else{
+			out.println("{\"response\":0}");  
+		}		
 	}
 
 	
@@ -51,6 +68,17 @@ public class asiakkaat extends HttpServlet {
 	
 	protected void doDelete(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		System.out.println("asiakkaat.doDelete()");
+		String pathInfo = request.getPathInfo();	
+		System.out.println("polku: "+pathInfo);
+		String poistettavaAsiakasID = pathInfo.replace("/", "");		
+		response.setContentType("application/json");
+		PrintWriter out = response.getWriter();
+		Dao dao = new Dao();			
+		if(dao.poistaAsiakas(poistettavaAsiakasID)){ 
+			out.println("{\"response\":1}");  
+		}else{
+			out.println("{\"response\":0}");  
+		}	
 	}
 
 }
