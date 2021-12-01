@@ -46,7 +46,7 @@ public class Dao {
 						myynti.setEtunimi(rs.getString(2));
 						myynti.setSukunimi(rs.getString(3));
 						myynti.setPuhelin(rs.getString(4));
-						myynti.setSposti(rs.getString(4));	
+						myynti.setSposti(rs.getString(5));	
 						asiakkaat.add(myynti);
 					}					
 				}				
@@ -93,15 +93,16 @@ public ArrayList<Myynti> listaaKaikki(String hakusana){
 
 public boolean lisaaAsiakas(Myynti myynti){
 	boolean paluuArvo=true;
-	sql="INSERT INTO autot VALUES(?,?,?,?)";						  
+	sql="INSERT INTO asiakkaat (etunimi, sukunimi, puhelin, sposti) VALUES(?,?,?,?)";						  
 	try {
 		con = yhdista();
 		stmtPrep=con.prepareStatement(sql); 
-		stmtPrep.setString(2, myynti.getEtunimi());
-		stmtPrep.setString(3, myynti.getSukunimi());
-		stmtPrep.setString(4, myynti.getPuhelin());
-		stmtPrep.setString(5, myynti.getSposti());
+		stmtPrep.setString(1, myynti.getEtunimi());
+		stmtPrep.setString(2, myynti.getSukunimi());
+		stmtPrep.setString(3, myynti.getPuhelin());
+		stmtPrep.setString(4, myynti.getSposti());
 		stmtPrep.executeUpdate();
+		// System.out.println("Uusin id on " + stmtPrep.getGeneratedKeys().getInt(1));
         con.close();
 	} catch (Exception e) {				
 		e.printStackTrace();
@@ -109,13 +110,13 @@ public boolean lisaaAsiakas(Myynti myynti){
 	}				
 	return paluuArvo;
 }
-	public boolean poistaAsiakas(String asiakas_id){
+	public boolean poistaAsiakas(int asiakas_id){
 	boolean paluuArvo=true;
-	sql="DELETE FROM autot WHERE asiakas_id=?";						  
+	sql="DELETE FROM asiakkaat WHERE asiakas_id=?";						  
 	try {
 		con = yhdista();
 		stmtPrep=con.prepareStatement(sql); 
-		stmtPrep.setString(1, asiakas_id);			
+		stmtPrep.setInt(1, asiakas_id);			
 		stmtPrep.executeUpdate();
         con.close();
 	} catch (Exception e) {				
@@ -124,7 +125,53 @@ public boolean lisaaAsiakas(Myynti myynti){
 	}				
 	return paluuArvo;
 }	
+	public Myynti etsiAsiakas(int asiakas_id) {
+		Myynti myynti = null;
+		sql = "SELECT * FROM asiakkaat WHERE asiakas_id=?";
+		
+		try {
+			con=yhdista();
+			if(con!=null){ 
+				stmtPrep = con.prepareStatement(sql); 
+				stmtPrep.setInt(1, asiakas_id);
+	    		rs = stmtPrep.executeQuery();   
+				if(rs.isBeforeFirst()){ 					
+					rs.next();
+						myynti = new Myynti();
+						myynti.setAsiakas_id(rs.getInt(1));
+						myynti.setEtunimi(rs.getString(2));
+						myynti.setSukunimi(rs.getString(3));
+						myynti.setPuhelin(rs.getString(4));	
+						myynti.setSposti(rs.getString(5));	
+					}					
+				}				
+			con.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}		
+		return myynti;
+	}
+	
+	public boolean muutaAsiakas(Myynti myynti){
+		boolean paluuArvo=true;
+		sql="UPDATE asiakkaat SET etunimi=?, sukunimi=?, puhelin=?, sposti=? WHERE asiakas_id=?";						  
+		try {
+			con = yhdista();
+			stmtPrep=con.prepareStatement(sql); 
+			stmtPrep.setString(1, myynti.getEtunimi());
+			stmtPrep.setString(2, myynti.getSukunimi());
+			stmtPrep.setString(3, myynti.getPuhelin());
+			stmtPrep.setString(4, myynti.getSposti());
+			stmtPrep.executeUpdate();
+	        con.close();
+		} catch (Exception e) {				
+			e.printStackTrace();
+			paluuArvo=false;
+		}				
+		return paluuArvo;
+	}
 }
+
 
 
 	
