@@ -162,6 +162,7 @@ public boolean lisaaAsiakas(Myynti myynti){
 			stmtPrep.setString(2, myynti.getSukunimi());
 			stmtPrep.setString(3, myynti.getPuhelin());
 			stmtPrep.setString(4, myynti.getSposti());
+			stmtPrep.setInt(5, myynti.getAsiakas_id());
 			stmtPrep.executeUpdate();
 	        con.close();
 		} catch (Exception e) {				

@@ -22,7 +22,7 @@
 				<th>Sukunimi</th>
 				<th>Puhelin</th>
 				<th>Sähköposti</th>
-				<th></th>
+				<th>Hallinta</th>
 			</tr>
 		</thead>
 		<tbody>
@@ -31,10 +31,11 @@
 				<td><input type="text" name="sukunimi" id="sukunimi"></td>
 				<td><input type="text" name="puhelin" id="puhelin"></td> 
 				<td><input type="text" name="sposti" id="sposti"></td>
-				<td><input type="submit" id="tallenna" value="Hyväksy"></td>
+				<td><input type="submit" id="tallenna" value="Tallenna"></td>
 			</tr>
 		</tbody>
 	</table>
+	<input type="hidden" name="asiakas_id" id="asiakas_id">
 </form>
 <span id="ilmo"></span>
 </body>
@@ -44,12 +45,15 @@ $(document).ready(function(){
 		document.location="listaaasiakkaat.jsp";
 	});
 	
+	$("#etunimi").focus();
+	
 	var asiakas_id = requestURLParam("asiakas_id");
 	$.ajax({url:"asiakkaat/haeyksi/"+asiakas_id, type: "GET", dataType:"json", success: function(result){
 		$("#etunimi").val(result.etunimi);
 		$("#sukunimi").val(result.sukunimi);
 		$("#puhelin").val(result.puhelin);
 		$("#sposti").val(result.sposti);
+		$("#asiakas_id").val(result.asiakas_id);
 	}});
 
 	$("#tiedot").validate({						
@@ -107,7 +111,6 @@ function paivitaTiedot(){
       	$("#ilmo").html("Asiakkaan muokkaaminen epäonnistui.");
       }else if(result.response==1){			
       	$("#ilmo").html("Asiakkaan muokkaaminen onnistui.");
-      	$("#etunimi", "#sukunimi", "#puhelin", "#sposti").val("");
 		}
   }});	
 }

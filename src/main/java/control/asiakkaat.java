@@ -82,6 +82,7 @@ public class asiakkaat extends HttpServlet {
 		System.out.println("asiakkaat.doPut()");
 		JSONObject jsonObj = new JsonStrToObj().convert(request);	
 		Myynti myynti = new Myynti();
+		myynti.setAsiakas_id(Integer.parseInt(jsonObj.getString("asiakas_id")));
 		myynti.setEtunimi(jsonObj.getString("etunimi"));
 		myynti.setSukunimi(jsonObj.getString("sukunimi"));
 		myynti.setPuhelin(jsonObj.getString("puhelin"));
